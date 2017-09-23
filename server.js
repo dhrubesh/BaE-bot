@@ -104,22 +104,50 @@ function sendGenericMessage(recipientId, messageText) {
 }
 
 function sendTextMessage(recipientId, messageText) {
-    console.log(messageText)
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    //  "sender_action":"typing_on",
-    "message":{
-        "attachment":{
-          "type":"image",
-          "payload":{
-            "url":"http://data.whicdn.com/images/39441866/original.jpg"
-          }
-        }
-      }
-  };
-
+    // console.log(messageText.slice(0,3))
+    // console.log(messageText.length)
+    //  img_url = ''
+    var gif = messageText.slice(0,3)
+    var query = messageText.slice(3,messageText.length)
+    if(gif == 'gif'){
+        fetch(GIPHY_URL + query)
+        .then(res => res.json())
+        .then(json => {
+            img_url = ''
+            img_url = json.data.image_url
+            // console.log(json.data.image_url)
+          });
+          console.log(img_url)
+          
+        //   console.log(query)
+         if(img_url){ 
+             var messageData = {
+            recipient: {
+              id: recipientId
+            },
+            //  "sender_action":"typing_on",
+            "message":{
+                "attachment":{
+                  "type":"image",
+                  "payload":{
+                    "url":img_url
+                      
+                  }
+                }
+              }
+          };
+         }
+    }else{
+        var messageData = {
+         recipient: {
+           id: recipientId
+         },
+         message: {
+           text: 'Yo! This is BaE. Search for a GIF by typing GIF followed by type.'
+         }
+      };
+    }
+  
   callSendAPI(messageData);
 }
 
