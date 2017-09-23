@@ -109,7 +109,7 @@ function sendTextMessage(recipientId, messageText) {
     //  img_url = ''
     var gif = messageText.slice(0,3)
     var query = messageText.slice(3,messageText.length)
-    if(gif == 'gif'){
+    if(gif == 'gif' || gif == 'GIF'){
         fetch(GIPHY_URL + query)
         .then(res => res.json())
         .then(json => {
