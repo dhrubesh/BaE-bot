@@ -110,7 +110,7 @@ function sendTextMessage(recipientId, messageText) {
     // console.log(messageText.length)
     //  img_url = ''
     var gif = messageText.slice(0,3).toLowerCase();
-    var meme = messageText.slice(0,4).toLocaleLowerCase();
+    var meme = messageText.slice(0,4).toLowerCase();
     var name = messageText.slice(5,messageText.length)
     console.log(name)
     var query = messageText.slice(3,messageText.length)
