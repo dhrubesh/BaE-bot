@@ -4,6 +4,8 @@ require('dotenv').config()
 var request = require('request');
 const fetch = require('node-fetch');
 const GIPHY_URL = `http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=`;
+const MEME_URL = `http://belikebill.azurewebsites.net/billgen-API.php?default=1&name=`
+
 app.get('/', function (req, res) {
   res.send()
 })
@@ -108,6 +110,9 @@ function sendTextMessage(recipientId, messageText) {
     // console.log(messageText.length)
     //  img_url = ''
     var gif = messageText.slice(0,3).toLowerCase();
+    var meme = messageText.slice(0,4).toLocaleLowerCase();
+    var name = messageText.slice(5,messageText.length)
+    console.log(name)
     var query = messageText.slice(3,messageText.length)
     if(gif == 'gif'){
         fetch(GIPHY_URL + query)
@@ -137,7 +142,27 @@ function sendTextMessage(recipientId, messageText) {
               }
           };
          }
-    }else{
+    }else if(meme == 'meme'){
+      var img_URL = MEME_URL + name
+        if(img_URL){ 
+               var messageData = {
+              recipient: {
+                id: recipientId
+              },
+              //  "sender_action":"typing_on",
+              "message":{
+                  "attachment":{
+                    "type":"image",
+                    "payload":{
+                      "url":img_URL
+                        
+                    }
+                  }
+                }
+            };
+           }
+    }
+    else{
         var messageData = {
          recipient: {
            id: recipientId
