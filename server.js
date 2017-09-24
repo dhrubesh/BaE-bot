@@ -5,6 +5,8 @@ var request = require('request');
 const fetch = require('node-fetch');
 const GIPHY_URL = `http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=`;
 const MEME_URL = `http://belikebill.azurewebsites.net/billgen-API.php?default=1&name=`
+const apiCall = "http://api.duckduckgo.com/?q="
+const apicall2 = "&format=json"
 
 app.get('/', function (req, res) {
   res.send()
@@ -110,9 +112,11 @@ function sendTextMessage(recipientId, messageText) {
     // console.log(messageText.length)
     //  img_url = ''
     var gif = messageText.slice(0,3).toLowerCase();
-    var meme = messageText.slice(0,4).toLowerCase();
-    var name = messageText.slice(5,messageText.length)
-    console.log(name)
+    var word = messageText.slice(0,4).toLowerCase();
+    var search_word = messageText.slice(0,6).toLowerCase();
+    var search_this = messageText.slice(7,messageText.length);
+    var search = messageText.slice(5,messageText.length);
+    // console.log(name)
     var query = messageText.slice(3,messageText.length)
     if(gif == 'gif'){
         fetch(GIPHY_URL + query)
@@ -142,8 +146,8 @@ function sendTextMessage(recipientId, messageText) {
               }
           };
          }
-    }else if(meme == 'meme'){
-      var img_URL = MEME_URL + name
+    }else if(word == 'meme'){
+      var img_URL = MEME_URL + search
         if(img_URL){ 
                var messageData = {
               recipient: {
@@ -161,8 +165,39 @@ function sendTextMessage(recipientId, messageText) {
                 }
             };
            }
-    }
-    else{
+    }else if(search_word == 'search'){
+      
+          var api = apiCall + search_this + apicall2
+          console.log(api)
+          fetch(api)
+        .then(res => res.json())
+        .then(json => {
+            // console.log(json)
+            Text = ''
+            // console.log(json.AbstractText)
+            if(json.AbstractText){
+              Text = ''
+              Text = json.AbstractText
+            }else {
+              Text = ''
+              Text = json.RelatedTopics[0].Text
+                  
+            }
+            console.log('TEEEXT')
+          console.log(Text)
+        });
+          if(Text){
+         var messageData = {
+           recipient: {
+             id: recipientId
+           },
+           message: {
+             text: Text
+           }
+      };}
+        
+      
+    }else{
         var messageData = {
          recipient: {
            id: recipientId
