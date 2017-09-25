@@ -104,111 +104,91 @@ function receivedMessage(event) {
   }
 }
 function sendGenericMessage(recipientId, messageText) {
-  // To be expanded in later sections
+
+  
 }
 
 function sendTextMessage(recipientId, messageText) {
-    // console.log(messageText.slice(0,3))
-    // console.log(messageText.length)
-    //  img_url = ''
     var gif = messageText.slice(0,3).toLowerCase();
     var word = messageText.slice(0,4).toLowerCase();
     var search_word = messageText.slice(0,6).toLowerCase();
     var search_this = messageText.slice(7,messageText.length);
     var search = messageText.slice(5,messageText.length);
-    // console.log(name)
     var query = messageText.slice(3,messageText.length)
     if(gif == 'gif'){
-        fetch(GIPHY_URL + query)
-        .then(res => res.json())
-        .then(json => {
-            img_url = ''
-            img_url = json.data.image_url
-            // console.log(json.data.image_url)
-          });
-          console.log(img_url)
-          
-        //   console.log(query)
-         if(img_url){ 
-             var messageData = {
-            recipient: {
-              id: recipientId
-            },
-            //  "sender_action":"typing_on",
-            "message":{
-                "attachment":{
-                  "type":"image",
-                  "payload":{
-                    "url":img_url
-                      
-                  }
-                }
-              }
-          };
-         }
-    }else if(word == 'meme'){
-      var img_URL = MEME_URL + search
-        if(img_URL){ 
-               var messageData = {
-              recipient: {
-                id: recipientId
-              },
-              //  "sender_action":"typing_on",
-              "message":{
-                  "attachment":{
-                    "type":"image",
-                    "payload":{
-                      "url":img_URL
-                        
-                    }
-                  }
-                }
-            };
+          fetch(GIPHY_URL + query)
+          .then(res => res.json())
+          .then(json => {
+              img_url = ''
+              img_url = json.data.image_url
+            });
+             if(img_url){ 
+                 var messageData = {
+                      recipient: {
+                        id: recipientId
+                      },
+                      //  "sender_action":"typing_on",
+                      "message":{
+                          "attachment":{
+                            "type":"image",
+                            "payload":{
+                              "url":img_url
+                                
+                            }
+                          }
+                        }
+                    };          
+            callSendAPI(messageData);
            }
-    }else if(search_word == 'search'){
-      
-          var api = apiCall + search_this + apicall2
-          console.log(api)
-          fetch(api)
-        .then(res => res.json())
-        .then(json => {
-            // console.log(json)
-            Text = ''
-            // console.log(json.AbstractText)
-            if(json.AbstractText){
-              Text = ''
-              Text = json.AbstractText
-            }else {
-              Text = ''
-              Text = json.RelatedTopics[0].Text
-                  
+    }else if(word == 'meme'){
+        var img_URL = MEME_URL + search
+          if(img_URL){ 
+             var messageData = {
+                  recipient: {
+                    id: recipientId
+                  },
+                  //  "sender_action":"typing_on",
+                  "message":{
+                      "attachment":{
+                        "type":"image",
+                        "payload":{
+                          "url":img_URL
+                            
+                        }
+                      }
+                    }
+                  };
+              callSendAPI(messageData);
             }
-            console.log('TEEEXT')
-          console.log(Text)
-        });
-          if(Text){
-         var messageData = {
+     }else if(search_word == 'search'){
+          var api = apiCall + search_this + apicall2
+            fetch(api)
+            .then(res => res.json())
+            .then(json => {
+             Text = ''
+             Text = json.AbstractText || json.RelatedTopics[0].Text
+              var messageData = {
+                 recipient: {
+                   id: recipientId
+                 },
+                 message: {
+                   text: Text
+                 }
+              };
+          callSendAPI(messageData);
+       })
+    }else{
+        var messageData = {
            recipient: {
              id: recipientId
            },
            message: {
-             text: Text
+             text: 'Yo! This is BaE. Search for a GIF by typing GIF followed by type.'
            }
-      };}
-        
-      
-    }else{
-        var messageData = {
-         recipient: {
-           id: recipientId
-         },
-         message: {
-           text: 'Yo! This is BaE. Search for a GIF by typing GIF followed by type.'
-         }
-      };
+        };
+    callSendAPI(messageData);
     }
   
-  callSendAPI(messageData);
 }
 
 function callSendAPI(messageData) {
