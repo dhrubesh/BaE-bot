@@ -183,7 +183,7 @@ function sendTextMessage(recipientId, messageText) {
              id: recipientId
            },
            message: {
-             text: 'Yo! This is BaE. Search for a GIF by typing GIF followed by type.'
+             text: 'Yo! This is BaE. Try *GIF funny*, *MEME dhrubesh* or *SEARCH Pink Floyd*. Play around by changing the latter words.'
            }
         };
     callSendAPI(messageData);
